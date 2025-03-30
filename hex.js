@@ -40,16 +40,20 @@ function h2s(data) {
 	return data;
 }
 
-// Convert integer to hex string
+// Convert integer or array of integers to hex string
 // Useful for CANBUS ARBIDs, etc
 //
 // hex.i2s(191) => '0xBF'
+// hex.i2s([191, 255]) => ['0xBF', '0xFF']
 function i2s(data, prefix = true, length = 2) {
-	if (typeof data === 'undefined' || data === null || data === '') return false;
+    if (data === undefined || data === null || data === '') return false;
 
-	let hexstr = data.toString(16).toUpperCase().padStart(length, '0');
-	if (prefix === true) hexstr = '0x' + hexstr;
-	return hexstr;
+    const toHex = (num) => {
+        let hexstr = num.toString(16).toUpperCase().padStart(length, '0');
+        return prefix ? '0x' + hexstr : hexstr;
+    };
+
+    return Array.isArray(data) ? data.map(toHex) : toHex(data);
 }
 
 
